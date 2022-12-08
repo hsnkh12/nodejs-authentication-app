@@ -4,7 +4,7 @@ CREATE TABLE User(
     first_name VARCHAR(25), 
     last_name VARCHAR(25),
     email VARCHAR(70) UNIQUE NOT NULL,
-    password CHAR NOT NULL,
+    password VARCHAR(70) NOT NULL,
     is_admin BOOL DEFAULT(false),
     is_staff BOOL DEFAULT(false),
     is_active BOOL DEFAULT(true),
@@ -35,3 +35,6 @@ CREATE Table File(
     date_created DATE,
     FOREIGN KEY(user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
+
+
+INSERT INTO User(first_name,last_name,email,password,is_admin,is_staff,is_active,date_joined,last_login) VALUES("Hassan","El Abdallah","hassan@gmail.com","hassan12345",true,true,true,STR_TO_DATE('08-12-2022', '%d-%m-%Y'),STR_TO_DATE('08-12-2022', '%d-%m-%Y'));
