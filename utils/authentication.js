@@ -21,11 +21,21 @@ function verifyTokenMiddleware(req, res, next) {
   
   }
   
+class PasswordManager{
 
+  static encryptPassword(password){
+
+  }
+
+  static decryptPassword(encryptedPassword){
+
+  }
+}
 
 
 
 
 module.exports = {
-  verifyTokenMiddleware
+  verifyTokenMiddleware,
+  PasswordManager
 }
