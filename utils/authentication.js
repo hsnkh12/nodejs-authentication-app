@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-
+const bcrypt = require('bcrypt');
 
 function verifyTokenMiddleware(req, res, next) {
     // Get auth header value
@@ -23,13 +23,19 @@ function verifyTokenMiddleware(req, res, next) {
   
 class PasswordManager{
 
-  static encryptPassword(password){
+  static async hashPassword(password){
 
+    const salt = await bcrypt.genSalt(6);
+    const hashed = await bcrypt.hash(password, salt);
+
+    return hashed
   }
 
-  static decryptPassword(encryptedPassword){
-
+  static async comparePassword(password, hashedPassword){
+    return await bcrypt.compare(password, hashedPassword);
   }
+
+  
 }
 
 
