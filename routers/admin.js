@@ -3,11 +3,9 @@ const router = express.Router();
 const controllers = require('../controllers/admin')
 
 router.get('/', async (req, res) => {
-    
+    res.sendStatus(201)
 })
 
-router.post('/login', controllers.loginController)
-router.post('/logout', controllers.logoutController)
 
 router.get('/users', controllers.listUserController)
 router.post('/users', controllers.createUserController)
