@@ -1,5 +1,5 @@
 const db = require('../utils/database')
-const PasswordManager = require('../utils/authentication')
+const {PasswordManager} = require('../utils/password')
 
 module.exports = class User{
 
@@ -20,7 +20,7 @@ module.exports = class User{
     }
 
     static getUserById(userID){
-        return db.execute('SELECT * FROM User WHERE id = ?',[userID])
+        return db.execute('SELECT * FROM User WHERE user_id = ?',[userID])
     }
 
     static getUserByEmail(userEmail){
@@ -31,19 +31,42 @@ module.exports = class User{
         return db.execute('DELETE FROM User WHERE id = ?',[userID])
     }
 
-    saveUser(userID=null){
+    async saveUser(userID=null){
 
         if(userID == null){
 
             if(this.#userDataIsValid){
-                return this.#insertUserDataToDatabase()
+
+                try{
+                    this.password = await this.#hashPassword(this.password)
+                    return this.#insertUserDataToDatabase()
+                }
+                catch(error){
+                    console.log(error)
+                }
+                
             }
 
-            throw new Error("Data invalid")
+        } else {
+            if(this.#userDataIsValid){
+                return this.#updateUserData(userID)
+            }
+        }
+
+        throw new Error("Data invalid")
+    }
+
+    async #hashPassword(password){
+        try{
+            return await PasswordManager.hashPassword(password)
+        }
+        catch(error){
+            console.log(error)
         }
     }
 
     #userDataIsValid(){
+        // Validation
         return true
     }
 
