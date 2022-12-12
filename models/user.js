@@ -15,20 +15,20 @@ module.exports = class User{
         this.lastLogin = lastLogin
     }
 
-    static getAllUsers(){
-        return db.execute('SELECT user.email, user.user_id FROM USER')
+    static async getAllUsers(){
+        return await db.execute('SELECT user.email, user.user_id FROM USER')
     }
 
-    static getUserById(userID){
-        return db.execute('SELECT * FROM User WHERE user_id = ?',[userID])
+    static async getUserById(userID){
+        return await db.execute('SELECT * FROM User WHERE user_id = ?',[userID])
     }
 
-    static getUserByEmail(userEmail){
-        return db.execute('SELECT * FROM User WHERE email = ?',[userEmail])
+    static async getUserByEmail(userEmail){
+        return await db.execute('SELECT * FROM User WHERE email = ?',[userEmail])
     }
 
-    static deleteUserById(userID){
-        return db.execute('DELETE FROM User WHERE user_id = ?',[userID])
+    static async deleteUserById(userID){
+        return await db.execute('DELETE FROM User WHERE user_id = ?',[userID])
     }
 
     async saveUser(userID=null){
@@ -41,19 +41,13 @@ module.exports = class User{
 
         if(userID == null){
 
-            this.dateJoined = this.#convertDateToString(this.dateJoined)
-            
-            try{
-                this.password = await this.#hashPassword(this.password)
-                return this.#insertUserDataToDatabase()
-            }
-            catch(error){
-                console.log(error)
-            }
+            this.dateJoined = this.#convertDateToString(this.dateJoined)            
+            this.password = await this.#hashPassword(this.password)
+            return await this.#insertUserDataToDatabase()
 
         } else {
             
-            return this.#updateUserData(userID)
+            return await this.#updateUserData(userID)
             
         }
 
@@ -61,12 +55,7 @@ module.exports = class User{
     }
 
     async #hashPassword(password){
-        try{
-            return await PasswordManager.hashPassword(password)
-        }
-        catch(error){
-            console.log(error)
-        }
+        return await PasswordManager.hashPassword(password)
     }
 
     #userDataIsValid(){
@@ -74,13 +63,13 @@ module.exports = class User{
         return true
     }
 
-    #insertUserDataToDatabase(){
-        return db.execute('INSERT INTO USER(first_name, last_name, email, password, is_admin, is_staff, is_active, date_joined, last_login) VALUES (?,?,?,?,?,?,?,STR_TO_DATE(?, "%Y-%m-%d"),STR_TO_DATE(?, "%Y-%m-%d"))',
+    async #insertUserDataToDatabase(){
+        return await db.execute('INSERT INTO USER(first_name, last_name, email, password, is_admin, is_staff, is_active, date_joined, last_login) VALUES (?,?,?,?,?,?,?,STR_TO_DATE(?, "%Y-%m-%d"),STR_TO_DATE(?, "%Y-%m-%d"))',
         [this.firstName, this.lastName, this.email, this.password, this.isAdmin, this.isStaff, this.isActive, this.dateJoined, this.lastLogin])
     }
 
-    #updateUserData(userID){
-        return db.execute('UPDATE User SET first_name=? last_name=? email=? password=? is_admin=? is_staff=? is_active=? last_login=STR_TO_DATE(?, "%Y-%m-%d") WHERE user.user_id= ?',
+    async #updateUserData(userID){
+        return await db.execute('UPDATE User SET first_name=? last_name=? email=? password=? is_admin=? is_staff=? is_active=? last_login=STR_TO_DATE(?, "%Y-%m-%d") WHERE user.user_id= ?',
         [userID, this.firstName, this.lastName, this.email, this.password, this.isAdmin, this.isStaff, this.isActive, this.lastLogin])
     }   
 
