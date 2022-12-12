@@ -6,13 +6,6 @@ const { PasswordManager } = require('../utils/password')
 
 
 
-const loginController = async (req, res) => {    
-
-}
-
-const logoutController = async (req, res) => {
-
-}
 
 const listFileController = async (req, res) => {
 
@@ -36,8 +29,6 @@ const deleteFileController = async (req, res) =>{
 
 
 module.exports = {
-    loginController,
-    logoutController,
     listFileController,
     createFileController,
     retrieveFileController,

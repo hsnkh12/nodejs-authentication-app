@@ -2,10 +2,6 @@
 
 
 
-const logoutController = async (req, res) => {
-
-}
-
 const listFileController = async (req, res) =>{
 
 }
@@ -59,7 +55,6 @@ const deletePermissionController = async (req, res) =>{
 }
 
 module.exports = {
-    logoutController,
     listFileController,
     createFileController,
     retrieveFileController,
