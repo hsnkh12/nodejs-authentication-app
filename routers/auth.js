@@ -40,8 +40,7 @@ router.post('/register', async (req, res) => {
 
     try{
 
-        let date = new Date()
-        date = date.toISOString().slice(0,10)
+        const date = new Date()
         
         let user = new User(
             firstName= body.first_name,
