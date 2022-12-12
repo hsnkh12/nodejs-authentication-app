@@ -10,15 +10,19 @@ module.exports = class File{
     }
 
     static getAllFiles(){
-
+        return db.execute('SELECT file_id, date_created FROM Files')
     }
 
     static getFileById(fileID){
+        return db.execute('SELECT * FROM Files WHERE file_id = ?', [fileID])
+    }
 
+    static getUserFiles(userID){
+        return db.execute('SELECT file_id, date_created FROM Files WHERE user_id = ?',[userID])
     }
 
     static deleteFileById(fileID){
-
+        return db.execute('DELETE FROM File WHERE file_id = ?', [fileID])
     }
 
     async saveFile(fileID=null){
