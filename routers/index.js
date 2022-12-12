@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
 router.get('/files', controllers.listFileController)
 router.post('/files', controllers.createFileController)
 
-router.get('/files:fileID', controllers.retrieveFileController)
+router.get('/files/:fileID', controllers.retrieveFileController)
 router.put('/files/:fileID', controllers.updateFileController)
 router.delete('/files/:fileID', controllers.deleteFileController)
 
