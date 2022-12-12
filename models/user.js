@@ -28,32 +28,36 @@ module.exports = class User{
     }
 
     static deleteUserById(userID){
-        return db.execute('DELETE FROM User WHERE id = ?',[userID])
+        return db.execute('DELETE FROM User WHERE user_id = ?',[userID])
     }
 
     async saveUser(userID=null){
 
+        if(this.#userDataIsValid() == false){
+            throw new Error("Data invalid")
+        }
+
+        this.lastLogin = this.#convertDateToString(this.lastLogin)
+
         if(userID == null){
 
-            if(this.#userDataIsValid){
-
-                try{
-                    this.password = await this.#hashPassword(this.password)
-                    return this.#insertUserDataToDatabase()
-                }
-                catch(error){
-                    console.log(error)
-                }
-                
+            this.dateJoined = this.#convertDateToString(this.dateJoined)
+            
+            try{
+                this.password = await this.#hashPassword(this.password)
+                return this.#insertUserDataToDatabase()
+            }
+            catch(error){
+                console.log(error)
             }
 
         } else {
-            if(this.#userDataIsValid){
-                return this.#updateUserData(userID)
-            }
+            
+            return this.#updateUserData(userID)
+            
         }
 
-        throw new Error("Data invalid")
+        
     }
 
     async #hashPassword(password){
@@ -79,6 +83,10 @@ module.exports = class User{
         return db.execute('UPDATE User SET first_name=? last_name=? email=? password=? is_admin=? is_staff=? is_active=? last_login=STR_TO_DATE(?, "%Y-%m-%d") WHERE user.user_id= ?',
         [userID, this.firstName, this.lastName, this.email, this.password, this.isAdmin, this.isStaff, this.isActive, this.lastLogin])
     }   
+
+    #convertDateToString(date){
+        return date.toISOString().slice(0,10)
+    }
 
 
 }
